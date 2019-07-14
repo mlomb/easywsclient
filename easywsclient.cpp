@@ -545,11 +545,11 @@ WebSocket::pointer WebSocket::create_dummy() {
 }
 
 
-WebSocket::pointer WebSocket::from_url(const std::string& url, const std::string& origin, const std::string& protocol = std::string()) {
+WebSocket::pointer WebSocket::from_url(const std::string& url, const std::string& origin, const std::string& protocol) {
     return ::from_url(url, true, origin, protocol);
 }
 
-WebSocket::pointer WebSocket::from_url_no_mask(const std::string& url, const std::string& origin, const std::string& protocol = std::string()) {
+WebSocket::pointer WebSocket::from_url_no_mask(const std::string& url, const std::string& origin, const std::string& protocol) {
     return ::from_url(url, false, origin, protocol);
 }
 
