@@ -453,7 +453,7 @@ class _RealWebSocket : public easywsclient::WebSocket
 };
 
 
-easywsclient::WebSocket::pointer from_url(const std::string& url, bool useMask, const std::string& origin) {
+easywsclient::WebSocket::pointer from_url(const std::string& url, bool useMask, const std::string& origin, const std::string& protocol = std::string()) {
     char host[512];
     int port;
     char path[512];
@@ -506,6 +506,9 @@ easywsclient::WebSocket::pointer from_url(const std::string& url, bool useMask, 
             snprintf(line, 1024, "Origin: %s\r\n", origin.c_str()); ::send(sockfd, line, strlen(line), 0);
         }
         snprintf(line, 1024, "Sec-WebSocket-Key: x3JJHMbDL1EzLkh9GBhXDw==\r\n"); ::send(sockfd, line, strlen(line), 0);
+		if (!protocol.empty()) {
+			snprintf(line, 1024, "Sec-WebSocket-Protocol: %s\r\n", protocol.c_str()); ::send(sockfd, line, strlen(line), 0);
+		}
         snprintf(line, 1024, "Sec-WebSocket-Version: 13\r\n"); ::send(sockfd, line, strlen(line), 0);
         snprintf(line, 1024, "\r\n"); ::send(sockfd, line, strlen(line), 0);
         for (i = 0; i < 2 || (i < 1023 && line[i-2] != '\r' && line[i-1] != '\n'); ++i) { if (recv(sockfd, line+i, 1, 0) == 0) { return NULL; } }
@@ -542,12 +545,12 @@ WebSocket::pointer WebSocket::create_dummy() {
 }
 
 
-WebSocket::pointer WebSocket::from_url(const std::string& url, const std::string& origin) {
-    return ::from_url(url, true, origin);
+WebSocket::pointer WebSocket::from_url(const std::string& url, const std::string& origin, const std::string& protocol = std::string()) {
+    return ::from_url(url, true, origin, protocol);
 }
 
-WebSocket::pointer WebSocket::from_url_no_mask(const std::string& url, const std::string& origin) {
-    return ::from_url(url, false, origin);
+WebSocket::pointer WebSocket::from_url_no_mask(const std::string& url, const std::string& origin, const std::string& protocol = std::string()) {
+    return ::from_url(url, false, origin, protocol);
 }
 
 
